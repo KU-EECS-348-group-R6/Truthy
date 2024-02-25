@@ -38,7 +38,7 @@ Thur Feb 22
 - Mitchell created a discord server for easier communication.
 4:15-4:30
 - Continued to work on the parts of the project plan.
-- Ending meeting
+- Ended meeting
 
   Sun Feb 25
   5:05-5:15
