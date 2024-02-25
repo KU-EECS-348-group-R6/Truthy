@@ -48,3 +48,4 @@ Thur Feb 22
   - Continued to work on the project plan document
   - Set up next meeting for Thur Feb 29, 4-5 pm
   - Darshil reserved a room for our next meeting
+  - Ended meeting
