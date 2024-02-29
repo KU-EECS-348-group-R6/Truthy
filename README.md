@@ -49,3 +49,25 @@ Thur Feb 22
   - Set up next meeting for Thur Feb 29, 4-5 pm
   - Darshil reserved a room for our next meeting
   - Ended meeting
+ 
+  Thur Feb 29
+  4:00-4:15
+  - Nathan, Evan, and Mitchell attended the meeting
+  - Ian is sick
+  - Evan uploaded a document (the software requirements document) to a shared google drive, which can be accessed on github for us to work on.
+  - Worked on the document
+  4:15-4:30
+  - Continued to work on the document
+  - Jay and Darshil arrived, and they worked on the document as well
+  4:30-4:45
+  - Continued to work on the document
+    |  Person  | Secions |
+    | -------- | ------- |
+    | Evan   | 1.5, 3.1.2, 3.1.3, 3.1.4, 3.1.6|
+    | Jay    | 1, 3, 5  |
+    | Darshil | All of 2 |
+    | Mitchell | 1.2, 3.1.1, 3.1.5 |
+    | Nathan  | 1.1, 3.3, 4 |
+    | What's left| 1.4, 3.1, 3.2|
+  - Ended meeting
+    
