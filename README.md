@@ -68,6 +68,17 @@ Thur Feb 22
     | Darshil | All of 2 |
     | Mitchell | 1.2, 3.1.1, 3.1.5 |
     | Nathan  | 1.1, 3.3, 4 |
-    | What's left| 1.4, 3.1, 3.2|
+    | Ian  | 1.4, 3.1, 3.2|
   - Ended meeting
     
+Thur Mar 7
+  4:00-4:15
+  - Darshil got us the room reserved but he is sick and unable to attend.
+  - Nathan, Jay, Evan, Mitchell, and Ian attended the meeting.
+  - Continued to work on the document from last week.
+  4:15-4:30
+  - Discussed our constraints and non-functional requirements.
+  - Continued to work on document.
+  4:30-4:45
+  - Continued to work on document.
+  - Ended meeting 
