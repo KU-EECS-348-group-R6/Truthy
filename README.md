@@ -61,7 +61,7 @@ Thur Feb 22
   - Jay and Darshil arrived, and they worked on the document as well
   4:30-4:45
   - Continued to work on the document
-    |  Person  | Secions |
+    |  Person  | Sections |
     | -------- | ------- |
     | Evan   | 1.5, 3.1.2, 3.1.3, 3.1.4, 3.1.6|
     | Jay    | 1, 3, 5  |
@@ -85,5 +85,25 @@ Thur Mar 7
 
 Thur April 11
  4:00-4:15
- - Nathan, Mitchell, Evan, Ian attended the meeting.
- - Worked on the new document
+ - Nathan, Mitchell, Evan, Ian, and Jay attended the meeting.
+ - Worked on the new software architecture document.
+    |  Person  | Sections |
+    | -------- | ------- |
+    | Evan   | 5.2.1,5.2.2,5.2.3|
+    | Jay    |2,3 |
+    | Darshil | 8|
+    | Mitchell |5.1|
+    | Nathan  | 5.2.4,5.2.5,6|
+    | Ian  |1 |
+ 4:15-4:30
+ - Continued to work on document
+ - Continued to assign sections
+ 4:30-4:45
+ - Continued to work on document
+ 4:45-5:00
+ - Continued to work on document
+ 5:00-5:15
+ - Continued to work on document
+ 5:15-5:30
+ - Continued to work on document
+ - Ended the meeting
