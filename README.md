@@ -82,3 +82,8 @@ Thur Mar 7
   4:30-4:45
   - Continued to work on document.
   - Ended meeting 
+
+Thur April 11
+ 4:00-4:15
+ - Nathan, Mitchell, Evan, Ian attended the meeting.
+ - Worked on the new document
