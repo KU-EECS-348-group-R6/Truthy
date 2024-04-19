@@ -1,62 +1,112 @@
 #include "ExpressionParser.hpp"
 #include <cctype>
 #include <map>
-#include <iostream>
+#include <stdexcept>
 
+// Checks if the character is a defined operator
+bool ExpressionParser::isOperator(char ch) const {
+    return ch == '&' || ch == '|' || ch == '!' || ch == '@' || ch == '$' || ch == '=';
+}
+
+// Checks if the character is an operand (T or F)
+bool ExpressionParser::isOperand(char ch) const {
+    return std::toupper(ch) == 'T' || std::toupper(ch) == 'F';
+}
+
+// Defines the precedence of operators for use in infixToPostfix conversion
+int ExpressionParser::precedence(char op) const {
+    std::map<char, int> prec = {
+            {'!', 4},  // NOT has the highest precedence
+            {'&', 3},  // AND
+            {'|', 2},  // OR
+            {'@', 2},  // NAND
+            {'$', 1},  // XOR
+            {'=', 1}   // EQUALITY (if implemented)
+    };
+    return prec[op];
+}
+
+// Parses the input string expression into a vector of tokens in infix format
 std::vector<Token> ExpressionParser::parse(const std::string& expression) {
+    if (expression.empty()) {
+        throw std::invalid_argument("Empty expression: No operands or operators present");
+    }
+
     std::vector<Token> infixTokens;
-    bool expectOperand = true; // Start expecting an operand initially
+    bool expectOperand = true; // Expect an operand initially
+    char lastChar = 0; // Track the last character processed
 
-    for (size_t i = 0; i < expression.length(); ++i) {
-        char ch = expression[i];
-        if (isspace(ch)) continue; // Skip whitespace
-
+    for (char ch : expression) {
+        if (std::isspace(ch)) continue;
         if (expectOperand) {
             if (isOperand(ch)) {
-                infixTokens.emplace_back(ch == 'T');
-                expectOperand = false; // Next should be an operator or a parenthesis
-            } else if (ch == '(' || ch == '!') {
-                // '(' and '!' are valid if we are expecting an operand
-                infixTokens.emplace_back(ch);
+                infixTokens.emplace_back(std::toupper(ch) == 'T');
+                expectOperand = false; // Next, we expect an operator or a parenthesis
+                lastChar = ch;
+            } else if (ch == '(') {
+                infixTokens.emplace_back(ch, Token::Type::LEFT_PAREN);
+            } else if (ch == '!') {
+                infixTokens.emplace_back(ch, Token::Type::OPERATOR);
             } else {
-                throw std::invalid_argument("Expected operand, found: " + std::string(1, ch));
+                throw std::invalid_argument("Unknown operator: " + std::string(1, ch) + " [Reason: Unrecognized operator symbol]");
             }
         } else {
-            if (isOperator(ch) || ch == ')') {
-                infixTokens.emplace_back(ch);
-                expectOperand = ch != ')'; // If we have a closing parenthesis, we are still expecting an operator
-            } else if (isOperand(ch)) {
-                throw std::invalid_argument("Expected operator, found operand: " + std::string(1, ch));
+            if (isOperator(ch)) {
+                if (lastChar == ')' || isOperand(lastChar)) {
+                    infixTokens.emplace_back(ch, Token::Type::OPERATOR);
+                    expectOperand = true; // After an operator, an operand is expected
+                } else {
+                    throw std::invalid_argument("Double operator: " + std::string(1, lastChar) + " " + std::string(1, ch) + " [Reason: Two consecutive AND operators]");
+                }
+            } else if (ch == ')') {
+                infixTokens.emplace_back(ch, Token::Type::RIGHT_PAREN);
+                expectOperand = false; // An operator or closing parenthesis should follow
             } else {
-                throw std::invalid_argument("Invalid character in expression: " + std::string(1, ch));
+                throw std::invalid_argument("Expected operator or right parenthesis, found: " + std::string(1, ch));
             }
         }
+        lastChar = ch;
     }
-    if (expectOperand) {
-        throw std::invalid_argument("Expression ends unexpectedly, likely missing an operand.");
+
+    if (expectOperand && !infixTokens.empty()) {
+        throw std::invalid_argument("Missing operand: [Reason: Expression ends unexpectedly, likely missing an operand]");
     }
+
     return infixToPostfix(infixTokens);
 }
 
+std::set<char> ExpressionParser::extractVariables(const std::string& expression) {
+    std::set<char> variables;
+    for (char ch : expression) {
+        if (std::isalpha(ch) && std::isupper(ch)) { // Assume variables are uppercase letters
+            variables.insert(ch);
+        }
+    }
+    return variables;
+}
+
+// Converts a vector of tokens from infix to postfix notation using a stack-based approach
 std::vector<Token> ExpressionParser::infixToPostfix(const std::vector<Token>& infixTokens) {
     std::vector<Token> postfix;
     std::stack<Token> stack;
+
     for (const Token& token : infixTokens) {
         if (token.type == Token::Type::OPERAND) {
             postfix.push_back(token);
-        } else if (token.symbol == '(') {
+        } else if (token.type == Token::Type::LEFT_PAREN) {
             stack.push(token);
-        } else if (token.symbol == ')') {
-            while (!stack.empty() && stack.top().symbol != '(') {
+        } else if (token.type == Token::Type::RIGHT_PAREN) {
+            while (!stack.empty() && stack.top().type != Token::Type::LEFT_PAREN) {
                 postfix.push_back(stack.top());
                 stack.pop();
             }
-            if (stack.empty()) {
-                throw std::invalid_argument("Mismatched parentheses: no matching opening parenthesis.");
+            if (!stack.empty()) {
+                stack.pop(); // Pop the left parenthesis off the stack
+            } else {
+                throw std::invalid_argument("Mismatched parentheses: No matching opening parenthesis found.");
             }
-            stack.pop(); // Remove '(' from stack
-        } else if (isOperator(token.symbol)) {
-            while (!stack.empty() && precedence(stack.top().symbol) >= precedence(token.symbol)) {
+        } else if (token.isOperator()) {
+            while (!stack.empty() && stack.top().isOperator() && precedence(stack.top().symbol) >= precedence(token.symbol)) {
                 postfix.push_back(stack.top());
                 stack.pop();
             }
@@ -64,32 +114,14 @@ std::vector<Token> ExpressionParser::infixToPostfix(const std::vector<Token>& in
         }
     }
 
+    // Pop all the operators left in the stack
     while (!stack.empty()) {
-        if (stack.top().symbol == '(') {
-            throw std::invalid_argument("Mismatched parentheses: no matching closing parenthesis.");
+        if (stack.top().type == Token::Type::LEFT_PAREN) {
+            throw std::invalid_argument("Mismatched parentheses: No matching closing parenthesis found.");
         }
         postfix.push_back(stack.top());
         stack.pop();
     }
 
     return postfix;
-}
-
-int ExpressionParser::precedence(char op) const {
-    std::map<char, int> prec = {
-            {'!', 4}, // Highest precedence for unary NOT operator
-            {'&', 3},
-            {'|', 2},
-            {'@', 2},
-            {'$', 1} // Lowest precedence for binary operators
-    };
-    return prec[op];
-}
-
-bool ExpressionParser::isOperator(char ch) const {
-    return ch == '&' || ch == '|' || ch == '!' || ch == '@' || ch == '$';
-}
-
-bool ExpressionParser::isOperand(char ch) const {
-    return ch == 'T' || ch == 'F';
 }

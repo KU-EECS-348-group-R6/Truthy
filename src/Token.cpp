@@ -1,4 +1,12 @@
 #include "Token.hpp"
 
-Token::Token(bool value) : type(Token::Type::OPERAND), value(value) {}
-Token::Token(char symbol) : type(Token::Type::OPERATOR), symbol(symbol) {}
+// Constructor for operands
+Token::Token(bool val) : type(Type::OPERAND), value(val) {}
+
+// Constructor for operators and parentheses
+Token::Token(char sym, Type t) : type(t), symbol(sym) {}
+
+// Method to check if the token is an operator
+bool Token::isOperator() const {
+    return type == Type::OPERATOR && (symbol == '&' || symbol == '|' || symbol == '!' || symbol == '@' || symbol == '$');
+}
