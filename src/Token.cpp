@@ -2,6 +2,7 @@
 #include "Span.hpp"
 #include "errors/TokenizationException.hpp"
 #include <map>
+#include <iostream>
 
 // Checks if the character is a defined operator
 bool charIsOperator(char ch)  {
@@ -20,7 +21,7 @@ Token::Token(bool val, Span span) : type(Type::OPERAND), value(val), span(span) 
 Token::Token(char sym, Span span, std::string expression): span(span), symbol(sym) {
     if (charIsOperator(sym)) {
         type = Type::OPERATOR;
-    } if (charIsOperand(sym)) {
+    } else if (charIsOperand(sym)) {
         type = Type::OPERAND;
         value = std::toupper(sym) == 'T';
     } else if (sym == '(') {

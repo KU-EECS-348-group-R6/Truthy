@@ -29,7 +29,7 @@ std::vector<Token> ExpressionParser::parse(const std::string& expression) {
     for (int i = 0; i < expression.length(); i++) {
         char ch = expression[i];
         if (std::isspace(ch)) continue;
-        tokens.emplace_back(ch, Span(i));
+        tokens.emplace_back(ch, Span(i), expression);
     }
 
     return tokens;
