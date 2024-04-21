@@ -11,7 +11,7 @@ using namespace std;
 class MissingOpeningParenthesisException : ParseException
 {
 public:
-    MissingOpeningParenthesisException(Span opening_parentheses_location);
+    MissingOpeningParenthesisException(Span opening_parentheses_location,  string expression);
     virtual string display();
 };
 

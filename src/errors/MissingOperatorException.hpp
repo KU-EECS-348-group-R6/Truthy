@@ -16,8 +16,8 @@ private:
     Span operand_location;
 
 public:
-    MissingOperatorException(Token foundToken, Span operand_location);
-    MissingOperatorException(Span operand_location);
+    MissingOperatorException(Token foundToken, Span operand_location, Span error_location, string expression);
+    MissingOperatorException(Span operand_location, string expression);
     virtual string display();
 };
 

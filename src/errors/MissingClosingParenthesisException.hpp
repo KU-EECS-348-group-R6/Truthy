@@ -14,7 +14,7 @@ private:
     Span opening_parentheses_location;
 
 public:
-    MissingClosingParenthesisException(Span opening_parentheses_location);
+    MissingClosingParenthesisException(Span opening_parentheses_location, string expression);
     virtual string display();
 };
 

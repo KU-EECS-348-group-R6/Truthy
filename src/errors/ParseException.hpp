@@ -14,6 +14,8 @@ public:
     string expression;
     char *what();
 
+    ParseException(Span location, string expression);
+
     virtual string display() = 0;
 };
 

@@ -2,6 +2,7 @@
 #include "errors/TokenizationException.hpp"
 #include "errors/MissingOperandsException.hpp"
 #include "errors/MissingClosingParenthesisException.hpp"
+#include "errors/MissingOpeningParenthesisException.hpp"
 #include "errors/MissingOperatorException.hpp"
 #include <cctype>
 #include <map>
@@ -35,7 +36,7 @@ std::vector<Token> ExpressionParser::parse(const std::string& expression) {
 }
 
 // Group the input tokenized expression into a vector of tokens in postfix format
-std::vector<Token> ExpressionParser::group(const std::vector<Token>& infixTokens) {
+std::vector<Token> ExpressionParser::group(const std::vector<Token>& infixTokens, std::string expression) {
     if (infixTokens.empty()) {
         throw std::invalid_argument("Empty expression: No operands or operators present");
     }
@@ -50,7 +51,7 @@ std::vector<Token> ExpressionParser::group(const std::vector<Token>& infixTokens
             parenthesisStack.push(token);
         } else if (token.type == Token::Type::RIGHT_PAREN) {
             if (parenthesisStack.empty()) {
-                throw MissingClosingParenthesisException(token.span);
+                throw MissingOpeningParenthesisException(token.span, expression);
             }
             parenthesisStack.pop();
         }
@@ -60,7 +61,7 @@ std::vector<Token> ExpressionParser::group(const std::vector<Token>& infixTokens
                 expectOperand = false; // Next, we expect an operator or a parenthesis
             } else if (!(token.type == Token::Type::LEFT_PAREN || token.symbol == '!')) {
                 // throw std::invalid_argument("Unknown operator: " + std::string(1, ch) + " [Reason: Unrecognized operator symbol]");
-                throw MissingOperandsException(token, lastToken.span);
+                throw MissingOperandsException(token, lastToken.span, token.span, expression);
             }
         } else {
             if (token.isOperator()) {
@@ -68,13 +69,13 @@ std::vector<Token> ExpressionParser::group(const std::vector<Token>& infixTokens
                     expectOperand = true; // After an operator, an operand is expected
                 } else {
                     // throw std::invalid_argument("Double operator: " + std::string(1, lastChar) + " " + std::string(1, ch) + " [Reason: Two consecutive AND operators]");
-                    throw MissingOperatorException(token, lastToken.span);
+                    throw MissingOperatorException(token, lastToken.span, token.span, expression);
                 }
             } else if (token.type == Token::Type::RIGHT_PAREN) {
                 expectOperand = false; // An operator or closing parenthesis should follow
             } else {
                 // throw std::invalid_argument("Expected operator or right parenthesis, found: " + std::string(1, ch));
-                throw MissingOperatorException(token, lastToken.span);
+                throw MissingOperatorException(token, lastToken.span, token.span, expression);
             }
         }
         lastToken = token;
@@ -82,12 +83,12 @@ std::vector<Token> ExpressionParser::group(const std::vector<Token>& infixTokens
 
     if (expectOperand && !infixTokens.empty()) {
         // throw std::invalid_argument("Missing operand: [Reason: Expression ends unexpectedly, likely missing an operand]");
-        throw MissingOperatorException(lastToken.span);
+        throw MissingOperatorException(lastToken.span, expression);
     }
 
     // If there are unclosed parenthesis at the end of the expression, throw an exception
     if (!parenthesisStack.empty()) {
-        throw MissingClosingParenthesisException(parenthesisStack.top().span);
+        throw MissingClosingParenthesisException(parenthesisStack.top().span, expression);
     }
 
     return infixToPostfix(infixTokens);

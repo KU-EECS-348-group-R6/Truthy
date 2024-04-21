@@ -14,7 +14,7 @@ public:
     Span span;   // The span of the token in the expression
 
     Token(bool val, Span span);
-    Token(char sym, Span span);
+    Token(char sym, Span span, std::string expression);
     bool isOperator() const;
     bool isOperand() const;
 };

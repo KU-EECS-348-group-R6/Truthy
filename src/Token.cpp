@@ -17,7 +17,7 @@ bool charIsOperand(char ch)  {
 Token::Token(bool val, Span span) : type(Type::OPERAND), value(val), span(span) {}
 
 // Constructor for operators and parentheses
-Token::Token(char sym, Span span): span(span), symbol(sym) {
+Token::Token(char sym, Span span, std::string expression): span(span), symbol(sym) {
     if (charIsOperator(sym)) {
         type = Type::OPERATOR;
     } if (charIsOperand(sym)) {
@@ -30,7 +30,7 @@ Token::Token(char sym, Span span): span(span), symbol(sym) {
     } else if (isalpha(sym)) {
         type = Type::VARIABLE;
     } else {
-        throw TokenizationException(sym, span);
+        throw TokenizationException(sym, span, expression);
     }
 }
 

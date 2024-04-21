@@ -3,6 +3,8 @@
 
 using namespace std;
 
+TokenizationException::TokenizationException(char invalidByte, Span span, string expression) : ParseException(span, expression), invalidByte(invalidByte) {}
+
 string TokenizationException::display()
 {
     string errorMessage = "Tokenization error - Found invalid byte: '";
