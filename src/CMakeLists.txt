@@ -12,7 +12,12 @@ set(SOURCE_FILES
         CLIInterface.cpp
         Span.cpp
         errors/ParseException.cpp
-        errors/TokenizationException.cpp)
+        errors/TokenizationException.cpp
+        errors/MissingOpeningParenthesisException.cpp
+        errors/MissingOperatorException.cpp
+        errors/MissingClosingParenthesisException.cpp
+        errors/MissingOperandsException.cpp
+        errors/MissingOperatorException.cpp)
 
 # Main executable
 add_executable(Truthy main.cpp ${SOURCE_FILES})

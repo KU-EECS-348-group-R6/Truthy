@@ -9,11 +9,9 @@ using namespace std;
 
 class ParseException : public exception
 {
-private:
-    Span location;
-    char *expression;
-
 public:
+    Span location;
+    string expression;
     char *what();
 
     virtual string display() = 0;

@@ -13,6 +13,7 @@ private:
     char invalidByte;
 
 public:
+    TokenizationException(char invalidByte, Span span);
     virtual string display();
 };
 

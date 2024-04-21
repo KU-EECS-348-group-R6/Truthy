@@ -10,6 +10,7 @@
 class ExpressionParser {
 public:
     std::vector<Token> parse(const std::string& expression);
+    std::vector<Token> group(const std::vector<Token>& tokens);
     std::set<char> extractVariables(const std::string& expression); // New method
     // Other methods...
 
