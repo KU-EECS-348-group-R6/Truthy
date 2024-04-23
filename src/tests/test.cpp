@@ -8,11 +8,11 @@
 
 int passORfail(bool s) {
     if (s) {
-        std::cout << std::left << std::setw(10) << "Test Passed";
+        std::cout << std::left << std::setw(10) << "Passed";
         return 1;
     }
     else {
-        std::cout << std::left << std::setw(10) << "Test Failed";
+        std::cout << std::left << std::setw(10) << "Failed";
         return 0;
     }
 }
@@ -29,7 +29,6 @@ void testValidExpressions()
     ExpressionEvaluator evaluator;
     int counter = 0;
     int nCases = 0; //how many cases we have in file
-    //int limiter = 20; //if you don't want 100 test cases
     bool result;
     bool expected_var;
     bool debug_mode = true; //hides all correct cases
@@ -37,8 +36,8 @@ void testValidExpressions()
     std::ifstream test_cases(relPath + "test_cases.txt");
     std::ifstream results(relPath + "test_cases_results.txt");
     std::cout << "Test Case Phase 1: Testing for correctness" << std::endl << std::endl;
-    std::cout << std::left << std::setw(20) << "ID" << std::setw(100) << "Expression" << std::setw(20) << "Expected" << std::setw(20) << "Result" << std::setw(20) << "Pas/Fail" << std::endl;
-    //std::cout << std::setw(200) << std::setfill('-') << "-" << std::endl;
+    std::cout << std::left << std::setw(5) << "ID" << std::setw(80) << "Expression" << std::setw(10) << "Expected" << std::setw(10) << "Result" << std::setw(20) << "Pas/Fail" << std::endl;
+
     if (!test_cases.is_open() || !results.is_open()) {
         std::cout << "Couldn't open test case files" << std::endl;
     }
@@ -48,19 +47,20 @@ void testValidExpressions()
         while (std::getline(test_cases, expression) && std::getline(results, boolString)) {
             result = evaluator.evaluate(expression);
             expected_var = strToBool(boolString);
-            std::cout << std::left << std::setw(20) << nCases;
-            std::cout << std::left << std::setw(100) << expression;
-            std::cout << std::left << std::setw(20) << expected_var;
-            std::cout << std::left << std::setw(20) << result;
+            std::cout << std::left << std::setw(5) << nCases+1;
+            std::cout << std::left << std::setw(80) << expression;
+            std::cout << std::boolalpha << std::left << std::setw(10) << expected_var;
+            std::cout << std::boolalpha << std::left << std::setw(10) << result;
 
             counter += passORfail(result == expected_var);
             nCases++;
-            std::cout << std::endl;
+            std::cout << std::endl << std::endl;
 
         }
     }
-    //std::cout << std::setw(200) << std::setfill('-') << "-" << std::endl;
     std::cout << counter << " OUT OF " << nCases << " PASSED" << std::endl;
+    test_cases.close();
+    results.close();
 
     while (1) {
         std::cout << "enter to exit" << std::endl;
