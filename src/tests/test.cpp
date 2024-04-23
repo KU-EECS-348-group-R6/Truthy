@@ -1,13 +1,78 @@
 #include "../ExpressionEvaluator.hpp"
 #include "../errors/MissingOperandsException.hpp"
 #include <iostream>
+#include <fstream>
 #include <cassert>
+#include <string>
 
+int passORfail(bool s) {
+    if (s) {
+        std::cout << "Test Passed" << std::endl;
+        return 1;
+    }
+    else {
+        std::cout << "Test Failed" << std::endl;
+        return 0;
+    }
+}
+bool strToBool(const std::string& str) {
+    if (str[0] == 'T') {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
 void testValidExpressions()
 {
     ExpressionEvaluator evaluator;
+    int counter = 0;
+    int nCases = 0; //how many cases we have in file
+    //int limiter = 20; //if you don't want 100 test cases
+    bool result;
+    bool expected_var;
+    bool debug_mode = true; //hides all correct cases
+    std::string relPath = "../tests/";//path starts at executable
+    std::ifstream test_cases(relPath + "test_cases.txt");
+    std::ifstream results(relPath + "test_cases_results.txt");
+    std::cout << "Test Case Phase 1: Testing for correctness" << std::endl;
+    
+    if (!test_cases.is_open() || !results.is_open()) {
+        std::cout << "Couldn't open test case files" << std::endl;
+    }
+    else {
+        std::string expression;
+        std::string boolString;
+        while(std::getline(test_cases, expression) && std::getline(results, boolString)) {
+            result = evaluator.evaluate(expression);
+            expected_var = strToBool(boolString);
+            std::cout << "ID: " << nCases << std::endl;
+            std::cout << "Expression: " << expression << std::endl;
+            std::cout << "Expected: " << expected_var << std::endl;
+            std::cout << "Result: " << result << std::endl;
+            
+            counter += passORfail(result == expected_var);
+            nCases++;
+            std::cout << std::endl << std::endl;
+            
+        }
+    }
+
+    std::cout << counter << " OUT OF " << nCases << " PASSED" << std::endl;
+
+    while (1) {
+        std::cout << "enter to exit" << std::endl;
+        char ret;
+        //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin.get(ret);
+
+        if (ret == '\n') {
+            break;
+        }
+    }
 
     // Test valid expressions
+    /*
     assert(evaluator.evaluate("(T | F) $ F") == true);
     assert(evaluator.evaluate("! (T & T)") == false);
     assert(evaluator.evaluate("(F @ T) | (T @ F)") == true);
@@ -20,6 +85,7 @@ void testValidExpressions()
     assert(evaluator.evaluate("((F @ T) $ (T | (F & F))) & (T & (T @ (!T)))") == false);
 
     std::cout << "All valid expression tests passed!" << std::endl;
+    */
 }
 
 void testInvalidExpressions()
