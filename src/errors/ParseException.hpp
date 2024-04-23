@@ -12,11 +12,11 @@ class ParseException : public exception
 public:
     Span location;
     string expression;
-    char *what();
+    virtual char const* what() const throw();
 
     ParseException(Span location, string expression);
 
-    virtual string display() = 0;
+    virtual string display() const = 0;
 };
 
 #endif // ERROR_HPP

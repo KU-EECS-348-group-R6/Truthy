@@ -2,7 +2,6 @@
 #include "Span.hpp"
 #include "errors/TokenizationException.hpp"
 #include <map>
-#include <iostream>
 
 // Checks if the character is a defined operator
 bool charIsOperator(char ch)  {

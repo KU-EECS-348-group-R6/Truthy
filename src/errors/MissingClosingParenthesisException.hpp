@@ -8,14 +8,14 @@
 #include "Token.hpp"
 using namespace std;
 
-class MissingClosingParenthesisException : ParseException
+class MissingClosingParenthesisException : public ParseException
 {
 private:
     Span opening_parentheses_location;
 
 public:
     MissingClosingParenthesisException(Span opening_parentheses_location, string expression);
-    virtual string display();
+    string display() const;
 };
 
 #endif // ERROR_HPP

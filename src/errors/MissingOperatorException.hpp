@@ -18,7 +18,7 @@ private:
 public:
     MissingOperatorException(Token foundToken, Span operand_location, Span error_location, string expression);
     MissingOperatorException(Span operand_location, string expression);
-    virtual string display();
+    string display() const;
 };
 
 #endif // ERROR_HPP

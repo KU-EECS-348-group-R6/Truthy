@@ -14,7 +14,7 @@ private:
 
 public:
     TokenizationException(char invalidByte, Span span, string expression);
-    virtual string display();
+    string display() const;
 };
 
 #endif // ERROR_HPP

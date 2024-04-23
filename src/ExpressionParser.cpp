@@ -7,6 +7,7 @@
 #include <cctype>
 #include <map>
 #include <stdexcept>
+#include <iostream>
 
 // Defines the precedence of operators for use in infixToPostfix conversion
 int ExpressionParser::precedence(char op) const {
@@ -60,21 +61,18 @@ std::vector<Token> ExpressionParser::group(const std::vector<Token>& infixTokens
             if (token.isOperand()) {
                 expectOperand = false; // Next, we expect an operator or a parenthesis
             } else if (!(token.type == Token::Type::LEFT_PAREN || token.symbol == '!')) {
-                // throw std::invalid_argument("Unknown operator: " + std::string(1, ch) + " [Reason: Unrecognized operator symbol]");
                 throw MissingOperandsException(token, lastToken.span, token.span, expression);
             }
         } else {
             if (token.isOperator()) {
-                if (lastToken.type == Token::Type::LEFT_PAREN || lastToken.isOperand()) {
+                if (lastToken.type == Token::Type::RIGHT_PAREN || lastToken.isOperand()) {
                     expectOperand = true; // After an operator, an operand is expected
                 } else {
-                    // throw std::invalid_argument("Double operator: " + std::string(1, lastChar) + " " + std::string(1, ch) + " [Reason: Two consecutive AND operators]");
                     throw MissingOperatorException(token, lastToken.span, token.span, expression);
                 }
             } else if (token.type == Token::Type::RIGHT_PAREN) {
                 expectOperand = false; // An operator or closing parenthesis should follow
             } else {
-                // throw std::invalid_argument("Expected operator or right parenthesis, found: " + std::string(1, ch));
                 throw MissingOperatorException(token, lastToken.span, token.span, expression);
             }
         }
@@ -82,7 +80,6 @@ std::vector<Token> ExpressionParser::group(const std::vector<Token>& infixTokens
     }
 
     if (expectOperand && !infixTokens.empty()) {
-        // throw std::invalid_argument("Missing operand: [Reason: Expression ends unexpectedly, likely missing an operand]");
         throw MissingOperatorException(lastToken.span, expression);
     }
 

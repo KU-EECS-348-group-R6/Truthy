@@ -19,7 +19,7 @@ int Span::end() {
     return end_byte;
 }
 
-std::string Span::underline(std::string str) {
+std::string Span::underline(std::string str) const {
     // Find the original string length
     int str_len = str.length();
 

@@ -7,15 +7,14 @@ MissingOperatorException::MissingOperatorException(Token foundToken, Span operan
 MissingOperatorException::MissingOperatorException(Span operand_location, string expression) : ParseException(operand_location, expression), operand_location(operand_location), foundToken(Token(true, Span(0))){ 
 }
 
-string MissingOperatorException::display()
+string MissingOperatorException::display() const
 {
     string errorMessage = "Missing operator - Expected an operator after the operand at:\n";
     errorMessage += operand_location.underline(expression);
         errorMessage += "\nInstead found: ";
     if (endOfExpression) {
         errorMessage += "the end of the expression.";
-    }
-    else {
+    } else {
         errorMessage += foundToken.symbol;
     }
 

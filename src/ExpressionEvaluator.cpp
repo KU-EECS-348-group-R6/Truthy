@@ -3,10 +3,12 @@
 #include "BooleanLogic.hpp"
 #include <stack>
 #include <stdexcept>
+#include <iostream>
 
 bool ExpressionEvaluator::evaluate(const std::string& expression) {
     ExpressionParser parser;
-    std::vector<Token> postfixTokens = parser.parse(expression);
+    std::vector<Token> infixTokens = parser.parse(expression);
+    std::vector<Token> postfixTokens = parser.group(infixTokens, expression);
     std::stack<bool> evalStack;
 
     for (const Token& token : postfixTokens) {

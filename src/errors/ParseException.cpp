@@ -3,10 +3,10 @@
 
 ParseException::ParseException(Span location, string expression) : location(location), expression(expression) {}
 
-char *ParseException::what() {
+char const* ParseException::what() const throw(){
     string errorMessage = "Parse error: ";
     errorMessage += display();
-    errorMessage += "\nAt: ";
+    errorMessage += "\nError occurred while parsing:\n";
     errorMessage += location.underline(expression);
     errorMessage += "\n";
 

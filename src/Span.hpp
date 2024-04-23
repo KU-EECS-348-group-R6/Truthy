@@ -17,7 +17,7 @@ public:
     int start();
     int end();
 
-    std::string underline(std::string str);
+    std::string underline(std::string str) const;
 };
 
 #endif // TOKEN_HPP
