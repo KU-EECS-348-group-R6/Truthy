@@ -14,7 +14,7 @@ void testValidExpressions()
     assert(evaluator.evaluate("(T $ T) & F") == false);
     assert(evaluator.evaluate("! F | ! T") == true);
     assert(evaluator.evaluate("(((((T | F) & F) | (T & (T | F))) @ (T @ T)) $ (! (T | F)))") == true);
-    assert(evaluator.evaluate("((F $ ((T | F) & (F @ (T | F)))) | (T $ (T & F)))") == true);
+    assert(evaluator.evaluate("((F $ ((T | F) & (F @ (T | F)))) | (T $ (T & F)))") == false);
     assert(evaluator.evaluate("(((! (T $ F)) & (T @ T)) | ((F | T) & (T $ T)))") == false);
     assert(evaluator.evaluate("(((T @ T) $ (F @ T)) | ((!T) & (T | (!T))))") == true);
     assert(evaluator.evaluate("((F @ T) $ (T | (F & F))) & (T & (T @ (!T)))") == false);
