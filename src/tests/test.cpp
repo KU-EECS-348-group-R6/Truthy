@@ -1,5 +1,4 @@
-#include "../ExpressionEvaluator.hpp"
-#include "../errors/MissingOperandsException.hpp"
+#include "ExpressionEvaluator.hpp"
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -31,7 +30,6 @@ void testValidExpressions()
     int nCases = 0; //how many cases we have in file
     bool result;
     bool expected_var;
-    bool debug_mode = true; //hides all correct cases
     std::string relPath = "../tests/";//path starts at executable
     std::ifstream test_cases(relPath + "test_cases.txt");
     std::ifstream results(relPath + "test_cases_results.txt");
@@ -62,7 +60,7 @@ void testValidExpressions()
     test_cases.close();
     results.close();
 
-    while (1) {
+    while (true) {
         std::cout << "enter to exit" << std::endl;
         char ret;
         //std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -74,20 +72,20 @@ void testValidExpressions()
     }
 
     // Test valid expressions
-    /*
+
     assert(evaluator.evaluate("(T | F) $ F") == true);
     assert(evaluator.evaluate("! (T & T)") == false);
     assert(evaluator.evaluate("(F @ T) | (T @ F)") == true);
     assert(evaluator.evaluate("(T $ T) & F") == false);
     assert(evaluator.evaluate("! F | ! T") == true);
     assert(evaluator.evaluate("(((((T | F) & F) | (T & (T | F))) @ (T @ T)) $ (! (T | F)))") == true);
-    assert(evaluator.evaluate("((F $ ((T | F) & (F @ (T | F)))) | (T $ (T & F)))") == false);
+    assert(evaluator.evaluate("((F $ ((T | F) & (F @ (T | F)))) | (T $ (T & F)))") == true);
     assert(evaluator.evaluate("(((! (T $ F)) & (T @ T)) | ((F | T) & (T $ T)))") == false);
     assert(evaluator.evaluate("(((T @ T) $ (F @ T)) | ((!T) & (T | (!T))))") == true);
     assert(evaluator.evaluate("((F @ T) $ (T | (F & F))) & (T & (T @ (!T)))") == false);
 
     std::cout << "All valid expression tests passed!" << std::endl;
-    */
+
 }
 
 void testInvalidExpressions()
