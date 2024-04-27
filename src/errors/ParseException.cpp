@@ -1,5 +1,6 @@
 #include "ParseException.hpp"
 #include <string>
+#include <cstring>
 
 ParseException::ParseException(Span location, string expression) : location(location), expression(expression) {}
 
