@@ -55,7 +55,7 @@ void testInvalidExpressions(ExpressionEvaluator& evaluator) {
             "!!T", "T ! T", "T !& T", "T | (T & F))", "(T | F &)",
             "(| T & F)", "(T &)", "(T | (F & T) &)", "T $", "T @ F &",
             "T &&", "T || F", "T $ $ T", "T @ @ F", "(T | )",
-            "( & T)", "T (| F)", "(T & (T | ) F)", "T | T &", "T | T F T"
+            "( & T)", "T (| F)", "(T & (T | ) F)", "T | T &", "T | T F T", "T-F"
     };
 
     for (const auto& expr : invalidExpressions) {
