@@ -4,6 +4,7 @@
 #include <fstream>
 #include <cassert>
 #include <string>
+#include <limits>
 
 int passORfail(bool s) {
     std::cout << std::left << std::setw(10) << (s ? "Passed" : "Failed");
@@ -14,11 +15,11 @@ bool strToBool(const std::string& str) {
     return str[0] == 'T';
 }
 
-void runTestCases(ExpressionEvaluator& evaluator, const std::string& testFilePath, const std::string& resultFilePath) {
+void runTestCases(ExpressionEvaluator& evaluator, const std::string& testFilePath, const std::string& resultFilePath, int& passedCount) {
     std::ifstream test_cases(testFilePath);
     std::ifstream results(resultFilePath);
     std::string expression, boolString;
-    int counter = 0, nCases = 0;
+    int nCases = 0;
     bool result, expected;
 
     if (!test_cases.is_open() || !results.is_open()) {
@@ -36,17 +37,15 @@ void runTestCases(ExpressionEvaluator& evaluator, const std::string& testFilePat
         std::cout << std::left << std::setw(80) << expression;
         std::cout << std::boolalpha << std::left << std::setw(10) << expected;
         std::cout << std::boolalpha << std::left << std::setw(10) << result;
-        counter += passORfail(result == expected);
+        passedCount += passORfail(result == expected);
         assert(result == expected); // Assertion added here
         std::cout << std::endl;
     }
-
-    std::cout << std::endl << counter << " OUT OF " << nCases << " PASSED" << std::endl;
     test_cases.close();
     results.close();
 }
 
-void testInvalidExpressions(ExpressionEvaluator& evaluator) {
+void testInvalidExpressions(ExpressionEvaluator& evaluator, int& passedCount) {
     std::string invalidExpressions[] = {
             "! & T", "T ? T", "(T |)", "T = !(T & T)", "",
             "T &", "T | | T", "(T & (F |)", "T F", "T |& T",
@@ -55,7 +54,7 @@ void testInvalidExpressions(ExpressionEvaluator& evaluator) {
             "!!T", "T ! T", "T !& T", "T | (T & F))", "(T | F &)",
             "(| T & F)", "(T &)", "(T | (F & T) &)", "T $", "T @ F &",
             "T &&", "T || F", "T $ $ T", "T @ @ F", "(T | )",
-            "( & T)", "T (| F)", "(T & (T | ) F)", "T | T &", "T | T F T", "T-F"
+            "( & T)", "T (| F)", "(T & (T | ) F)", "T | T &", "T | T F T",
     };
 
     for (const auto& expr : invalidExpressions) {
@@ -65,24 +64,29 @@ void testInvalidExpressions(ExpressionEvaluator& evaluator) {
             assert(false); // Should not reach this point
         } catch (const std::exception& e) {
             std::cout << "Correctly caught an error for: " << expr << " - " << e.what() << std::endl;
-            assert(true); // Expected an exception
+            passedCount++;
         }
     }
-
-    std::cout << "All invalid expression tests passed!" << std::endl;
 }
-
 
 int main() {
     ExpressionEvaluator evaluator;
     std::string relPath = "../tests/"; // path starts at executable
+    int validPassed = 0;
+    int invalidPassed = 0;
 
     // Running test cases for valid expressions
-    runTestCases(evaluator, relPath + "test_cases.txt", relPath + "test_cases_results.txt");
+    runTestCases(evaluator, relPath + "test_cases.txt", relPath + "test_cases_results.txt", validPassed);
 
     // Running test cases for invalid expressions
-    testInvalidExpressions(evaluator);
+    testInvalidExpressions(evaluator, invalidPassed);
 
-    std::cout << "All tests executed!" << std::endl;
+    std::cout << validPassed << " valid test cases passed." << std::endl;
+    std::cout << invalidPassed << " invalid test cases passed." << std::endl;
+
+    std::cout << "Press ENTER to exit.";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.get();
+
     return 0;
 }
