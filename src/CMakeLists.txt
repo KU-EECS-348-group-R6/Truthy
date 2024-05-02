@@ -17,7 +17,6 @@ set(SOURCE_FILES
         errors/MissingOperatorException.cpp
         errors/MissingClosingParenthesisException.cpp
         errors/MissingOperandsException.cpp
-        errors/MissingOperatorException.cpp)  # Note: MissingOperatorException is listed twice, consider checking if this is intentional.
 
 # Main executable
 add_executable(Truthy main.cpp ${SOURCE_FILES})
