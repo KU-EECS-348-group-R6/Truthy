@@ -17,7 +17,7 @@ set(SOURCE_FILES
         errors/MissingOperatorException.cpp
         errors/MissingClosingParenthesisException.cpp
         errors/MissingOperandsException.cpp
-        errors/MissingOperatorException.cpp)
+        errors/MissingOperatorException.cpp)  # Note: MissingOperatorException is listed twice, consider checking if this is intentional.
 
 # Main executable
 add_executable(Truthy main.cpp ${SOURCE_FILES})
@@ -31,13 +31,17 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # Platform-specific configurations
 if(WIN32)
-  # Windows-specific includes or linker options
-  target_compile_definitions(Truthy PRIVATE WIN_PLATFORM)
-else(APPLE)
-  # macOS-specific includes or linker options
-  target_compile_definitions(Truthy PRIVATE MAC_PLATFORM)
+    # Windows-specific includes or linker options
+    target_compile_definitions(Truthy PRIVATE WIN_PLATFORM)
+elseif(APPLE)
+    # macOS-specific includes or linker options
+    target_compile_definitions(Truthy PRIVATE MAC_PLATFORM)
+else()
+    # Assume Linux or other Unix-like OS
+    target_compile_definitions(Truthy PRIVATE UNIX_PLATFORM)
+endif()
 
 set_target_properties(Truthy TruthyTest
     PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin
 )
