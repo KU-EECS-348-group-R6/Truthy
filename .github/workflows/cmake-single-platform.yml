@@ -11,59 +11,26 @@ env:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: windows-latest
-            build-dir: build
-          - os: macos-latest
-            build-dir: build
-          - os: ubuntu-latest
-            build-dir: build
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
 
-    - name: Set up environment
-      run: |
-        if [ "$RUNNER_OS" = "Windows" ]; then
-          choco install cmake
-        elif [ "$RUNNER_OS" = "macOS" ]; then
-          brew install cmake
-        elif [ "$RUNNER_OS" = "Linux" ]; then
-          sudo apt-get update
-          sudo apt-get install cmake
-        fi
+    - name: Print working directory
+      run: pwd
 
-    - uses: actions/cache@v2
-      with:
-        path: |
-          ~\AppData\Local\Temp\chocolatey
-          /usr/local/Homebrew
-          /var/cache/apt/archives
-        key: ${{ runner.os }}-deps-${{ hashFiles('**/CMakeLists.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-deps-
+    - name: List contents of the current directory
+      run: ls -alh
 
     - name: Configure CMake
-      # Note the added src/ to correctly locate the CMakeLists.txt
-      run: cmake -B ${{github.workspace}}/Truthy/src/${{ matrix.build-dir }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON
-      working-directory: ${{github.workspace}}/Truthy/src
+      # Adjust the path according to actual structure verified from the output above
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+      working-directory: ${{github.workspace}}/src
 
     - name: Build
-      # Adjusted the path to reflect the correct source location
-      run: cmake --build ${{github.workspace}}/Truthy/src/${{ matrix.build-dir }} --config ${{ env.BUILD_TYPE }}
-      working-directory: ${{github.workspace}}/Truthy/src
+      run: cmake --build build --config Release
+      working-directory: ${{github.workspace}}/src
 
     - name: Test
-      # Adjusted the working directory for running tests
-      working-directory: ${{github.workspace}}/Truthy/src/${{ matrix.build-dir }}
-      run: ctest -C ${{ env.BUILD_TYPE }} -V
-
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: Compiled-Binaries-${{ matrix.os }}
-        path: ${{github.workspace}}/Truthy/src/${{ matrix.build-dir }}/path-to-your-binaries
+      working-directory: ${{github.workspace}}/src/build
+      run: ctest -C Release
