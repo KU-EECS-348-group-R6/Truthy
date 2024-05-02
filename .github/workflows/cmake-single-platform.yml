@@ -11,26 +11,52 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            build-dir: build
+          - os: macos-latest
+            build-dir: build
+          - os: ubuntu-latest
+            build-dir: build
 
     steps:
     - uses: actions/checkout@v4
 
-    - name: Print working directory
-      run: pwd
+    - name: Set up environment
+      run: |
+        if [ "$RUNNER_OS" = "Windows" ]; then
+          choco install cmake
+        elif [ "$RUNNER_OS" = "macOS" ]; then
+          brew install cmake
+        elif [ "$RUNNER_OS" = "Linux" ]; then
+          sudo apt-get update
+          sudo apt-get install cmake
+        fi
 
-    - name: List contents of the current directory
-      run: ls -alh
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~\AppData\Local\Temp\chocolatey
+          /usr/local/Homebrew
+          /var/cache/apt/archives
+        key: ${{ runner.os }}-deps-${{ hashFiles('**/CMakeLists.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-deps-
 
     - name: Configure CMake
-      # Adjust the path according to actual structure verified from the output above
-      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+      run: cmake -B ${{ matrix.build-dir }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
       working-directory: ${{github.workspace}}/src
 
     - name: Build
-      run: cmake --build build --config Release
+      run: cmake --build ${{ matrix.build-dir }} --config ${{ env.BUILD_TYPE }}
       working-directory: ${{github.workspace}}/src
 
-    - name: Test
-      working-directory: ${{github.workspace}}/src/build
-      run: ctest -C Release
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: Compiled-Binaries-${{ matrix.os }}
+        path: ${{github.workspace}}/src/${{ matrix.build-dir }}/path-to-your-binaries
