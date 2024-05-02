@@ -7,4 +7,4 @@ Documents:
 - [Software Requirements spec](./docs/software_requirements_spec.pdf)
 - [Software Architecture](./docs/software_architecutre.pdf)
 - [User Manual](./docs/User%20Manual.pdf)
-- Download: https://github.com/KU-EECS-348-group-R6/Truthy/releases/tag/V1.0
+- Download: https://github.com/KU-EECS-348-group-R6/Truthy/releases/tag/V1.00
