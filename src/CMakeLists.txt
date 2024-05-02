@@ -29,6 +29,14 @@ add_executable(TruthyTest tests/test.cpp ${SOURCE_FILES})
 # Include the header files directory
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+# Platform-specific configurations
+if(WIN32)
+  # Windows-specific includes or linker options
+  target_compile_definitions(Truthy PRIVATE WIN_PLATFORM)
+else(APPLE)
+  # macOS-specific includes or linker options
+  target_compile_definitions(Truthy PRIVATE MAC_PLATFORM)
+
 set_target_properties(Truthy TruthyTest
     PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
