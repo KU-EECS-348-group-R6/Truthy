@@ -1,0 +1,47 @@
+name: CMake Cross-Platform Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            build-dir: build
+          - os: windows-latest
+            build-dir: build
+          - os: macos-latest
+            build-dir: build
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up environment
+      run: |
+        if [ "$RUNNER_OS" = "Windows" ]; then
+          choco install cmake
+        fi
+
+    - name: Configure CMake
+      # Configure CMake in a 'build' directory.
+      run: cmake -B ${{github.workspace}}/${{ matrix.build-dir }} -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }}
+
+    - name: Build
+      # Build your program with the given configuration
+      run: cmake --build ${{github.workspace}}/${{ matrix.build-dir }} --config ${{ env.BUILD_TYPE }}
+
+    - name: Test
+      working-directory: ${{github.workspace}}/${{ matrix.build-dir }}
+      # Execute tests defined by the CMake configuration.
+      run: ctest -C ${{ env.BUILD_TYPE }}
+
+
