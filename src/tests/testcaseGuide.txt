@@ -1,2 +1,0 @@
-The id's for the test cases are the line #
-some notebook editors have line numbers, which makes it easier to edit test cases
